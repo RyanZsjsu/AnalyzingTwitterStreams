@@ -30,7 +30,8 @@ for tweet in tweepy.Cursor(api.search, q='Trump OR DonaldTrump OR Donald Trump',
     print(type(tweet._json))
     print(counter)
     counter = counter + 1
-    tweet2 = json.loads(tweet._json)
+    #tweet2 = json.loads(tweet._json)
+    tweet2 = tweet._json
     tweet_text = tweet2.get("text", {})
     with open('batchtest.json', 'a') as my_json:
 		#json.dump(tweet_text, my_json)
