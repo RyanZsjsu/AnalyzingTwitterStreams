@@ -30,23 +30,30 @@ for tweet in tweepy.Cursor(api.search, q='Trump OR DonaldTrump OR Donald Trump',
     
     print(counter)
     counter = counter + 1
-    #tweet2 = json.loads(tweet._json)
-    tweet2 = tweet._json
-    tweet_text = tweet2.get("full_text", {})
+    if 'extended_tweet' in tweet._json: 
+        tweet_json = tweet._json['extended_tweet']['full_text'] 
+        print('extended_tweet case')
+    elif 'retweeted_status' in tweet._json and 'extended_tweet' in tweet._json['retweeted_status']: 
+        tweet_json = tweet._json['retweeted_status']['extended_tweet']['full_text'] 
+        print('retweeted_status and extended_tweet case')
+    elif 'retweeted_status' in tweet._json: 
+        tweet_json = tweet._json['retweeted_status']['full_text'] 
+        print('retweeted_status case')
+    else: 
+        tweet_json = tweet._json['full_text']
+        print('full text case') 
+    #print(tweet_json)
+
+    
+    #tweet2 = tweet._json
+    #tweet_text = tweet2.get("full_text", {})
     with open('batchtest.json', 'a') as my_json:
 		#json.dump(tweet_text, my_json)
-        json.dump(tweet_text, my_json)
+        #json.dump(tweet_text, my_json)
+        json.dump(tweet_json, my_json)
         my_json.write('\n')    
 
 
-# First you get the tweets in a json object
-results = [status._json for status in tweepy.Cursor(api.search, q='Trump OR DonaldTrump OR Donald Trump', tweet_mode='extended', rpp=100).items()]
-# Now you can iterate over 'results' and store the complete message from each tweet.
-    
 
-    my_tweets = []
-    for result in results:
-        my_tweets.append(result["full_text"])
-        result["retweeted_status"]["full_text"]
 
-    print(result[1][1])
+ 
